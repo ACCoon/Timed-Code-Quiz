@@ -1,2 +1,3 @@
-# Timed-Code-Quiz
-A timed, multiple-choice coding quiz powered by JavaScript
+# Timed-Coding-Quiz
+## Description
+A timed, multiple-choice coding quiz built utilizing dynamically updated HTML and CSS powered by JavaScript.

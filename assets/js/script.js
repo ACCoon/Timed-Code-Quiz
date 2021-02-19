@@ -4,12 +4,37 @@ var quizBox = document.querySelector(".container");
 
 var time;
 var timer;
+var questions = [];
+var questionNum;
+var currentQuestion = 0;
+
+// Add question data to array
+function loadQuestionData(question, answers, answerID){
+    questions.push({
+        question: question,
+        possibleAnswers: answers,
+        answer: answerID
+    })
+}
+
+// Load questions into question data array
+// Questions and answers taken from http://mcqspdfs.blogspot.com/2013/08/60-top-javascript-multiple-choice.html
+loadQuestionData("What are variables used for in JavaScript programs?", ["Storing numbers, dates, or other values","Varying randomly","Causing high-school algebra flashbacks","None of the above"], 0);
+loadQuestionData("Which of the following are capabilities of functions in JavaScript?", ["Return a value","Accept parameters and Return a value","Accept parameters","None of the above"], 2);
+loadQuestionData("The ______ tag is an extension to HTML that can enclose any number of JavaScript statements.", ["<script>","<body>","<head>","<title>"], 0);
+loadQuestionData("What is the correct syntax for referring to an external script called 'abc.js'?", ["<script href='abc.js'>","<script name='abc.js'>","<script src='abc.js'>","None of the above"], 2);
+loadQuestionData("The _______ method of an Array object adds and/or removes elements from an array.", ["Reverse","Shift","Slice","Splice"], 3);
 
 // Remove elements in current text box.
 function clearElements() {
     while (quizBox.children.length !== 0) {
         quizBox.removeChild(quizBox.lastChild);
     }
+}
+
+// End timer
+function stopTimer() {
+    clearInterval(timer);
 }
 
 // Start timer
@@ -21,12 +46,11 @@ function startTimer() {
     timer = setInterval( () => {
         timerEl.textContent = "Time: " + time;
         time--;
-    }, 1000);
-}
 
-// End timer
-function stopTimer() {
-    clearInterval(timer);
+        if(time < 0) {
+            stopTimer();
+        }
+    }, 1000);
 }
 
 // Generate elements for quiz start screen
@@ -54,8 +78,41 @@ function quizPreStart() {
     }
 }
 
+// Create elements for question and answers
+function createQuestionEls(){
+    var questionEl = document.createElement("h2");
+    var answersEl = document.createElement("ol");
+
+    quizBox.appendChild(questionEl);
+    quizBox.appendChild(answersEl);
+
+    for (var i = 0; i < 4; i++){i
+        var answersLiEl = document.createElement("li");
+        answersLiEl.setAttribute("id", i);
+        quizBox.lastChild.appendChild(answersLiEl);
+    }
+}
+
+// Populate elements with current question data
+function loadQuestion() {
+    var question = quizBox.firstChild;
+    var answerEls = quizBox.lastChild.children;
+
+    question.textContent = questions[currentQuestion].question;
+
+    for(var i = 0; i < answerEls.length; i++){
+        answerEls[i].textContent = questions[currentQuestion].possibleAnswers[i];
+    }
+}
+
 function quizStart () {
-    console.log("Quiz started");
+    currentQuestion = 0;
+
+    clearElements();
+    startTimer();
+
+    createQuestionEls();
+    loadQuestion();
 }
 
 quizPreStart();

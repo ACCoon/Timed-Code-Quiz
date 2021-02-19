@@ -40,12 +40,18 @@ button {
     align-self: center;
     margin: 20px;
 }
-.container li {
+.container button {
     margin: 8px;
     padding: 8px;
     width: 25%;
     color: #fff;
     background-color: #9515df;
+}
+
+#rightWrongText {
+    margin-top: 8px;
+    font-size: 16px;
+    font-style: italic;
 }
 
 #timer {

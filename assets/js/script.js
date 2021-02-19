@@ -54,7 +54,7 @@ function startTimer() {
 }
 
 function loadHiScorePrompt() {
-    
+
 }
 
 // Generate elements for quiz start screen
@@ -81,47 +81,27 @@ function quizPreStart() {
         quizBox.appendChild(quizStartEls[i]);
     }
 }
-
-// Create elements for question and answers
-function createQuestionEls(){
-    var questionEl = document.createElement("h2");
-    var answersEl = document.createElement("ol");
-    var rightOrWrong = document.createElement("p");
-
-    quizBox.appendChild(questionEl);
-    quizBox.appendChild(answersEl);
-
-    for (var i = 0; i < 4; i++){i
-        var answersLiEl = document.createElement("li");
-        answersLiEl.setAttribute("id", i);
-        answersLiEl.setAttribute("class", "answer");
-        quizBox.lastChild.appendChild(answersLiEl);
-    }
-
-    quizBox.appendChild(rightOrWrong);
-
-}
-
 // Populate elements with current question data
 function loadQuestion() {
     var questionEl = quizBox.children[0];
     var answerEls = quizBox.children[1].children;
-
+    
     questionEl.textContent = questions[currentQuestion].question;
 
     for(var i = 0; i < answerEls.length; i++){
-        answerEls[i].textContent = questions[currentQuestion].possibleAnswers[i];
+        answerEls[i].lastChild.textContent = questions[currentQuestion].possibleAnswers[i];
     }
 }
 
 // Check chosen answer and move to next question
 function nextQuestion(event) {
 
-    var chosenAnswer = event.target.getAttribute(id);
+    var chosenAnswer = event.target.getAttribute("id");
     var rightWrong = quizBox.querySelector("p");
+    console.log(chosenAnswer);
 
     // Check answer and display message. If answer is wrong, reduce time by 10
-    if (chosenAnswer !== questions[currentQuestion].answer){
+    if (chosenAnswer != questions[currentQuestion].answer){
         rightWrong.textContent = "Wrong!";
         time -= 10;
     }
@@ -137,6 +117,7 @@ function nextQuestion(event) {
     }
     // Else, prompt High Scores
     else {
+        stopTimer();
         loadHiScorePrompt();
     }
 }
@@ -151,7 +132,31 @@ function quizStart () {
     loadQuestion();
 }
 
+// Create elements for question and answers
+function createQuestionEls(){
+    var questionEl = document.createElement("h2");
+    var answersEl = document.createElement("ol");
+    var rightOrWrong = document.createElement("p");
+    rightOrWrong.setAttribute("id", "rightWrongText");
+
+    quizBox.appendChild(questionEl);
+    quizBox.appendChild(answersEl);
+
+    for (var i = 0; i < 4; i++){i
+        var answersLiEl = document.createElement("li");
+        var answerBtnEl = document.createElement("button");
+        answerBtnEl.setAttribute("id", i);
+        answerBtnEl.addEventListener("click", nextQuestion);
+        answersLiEl.appendChild(answerBtnEl);
+        // answersLiEl.innerHTML = "<button type='button' class='answer' id='" + i + "'></button>";
+        quizBox.lastChild.appendChild(answersLiEl);
+    }
+
+    quizBox.appendChild(rightOrWrong);
+
+}
+
+
 quizPreStart();
 
 document.getElementById("btnStart").addEventListener("click", quizStart);
-document.querySelectorAll(".answer").addEventListener("click", nextQuestion);

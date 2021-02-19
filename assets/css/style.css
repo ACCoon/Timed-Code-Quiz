@@ -1,0 +1,53 @@
+.root {
+    --lavender: #9106e2;
+    --white: #fff;
+}
+
+body {
+    max-width: 1200px;
+    margin: auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    padding: 4px;
+    margin: 4px;
+    font-weight: bold;
+}
+
+header h3 {
+    font-size: 16px;
+    color: #9515df;
+}
+
+button {
+    margin: 16px;
+    padding: 4px;
+    background-color: #9515df;
+    color: #fff;
+    align-self: center;
+}
+
+.container {
+    display: flex;
+    flex-flow: column;
+}
+
+.container h2 {
+    font-size: 28px;
+    align-self: center;
+    margin: 20px;
+}
+.container li {
+    margin: 8px;
+    padding: 8px;
+    width: 25%;
+    color: #fff;
+    background-color: #9515df;
+}
+
+#timer {
+    text-align: right;
+}

@@ -53,6 +53,10 @@ function startTimer() {
     }, 1000);
 }
 
+function loadHiScorePrompt() {
+    
+}
+
 // Generate elements for quiz start screen
 function quizPreStart() {
 
@@ -82,6 +86,7 @@ function quizPreStart() {
 function createQuestionEls(){
     var questionEl = document.createElement("h2");
     var answersEl = document.createElement("ol");
+    var rightOrWrong = document.createElement("p");
 
     quizBox.appendChild(questionEl);
     quizBox.appendChild(answersEl);
@@ -89,19 +94,50 @@ function createQuestionEls(){
     for (var i = 0; i < 4; i++){i
         var answersLiEl = document.createElement("li");
         answersLiEl.setAttribute("id", i);
+        answersLiEl.setAttribute("class", "answer");
         quizBox.lastChild.appendChild(answersLiEl);
     }
+
+    quizBox.appendChild(rightOrWrong);
+
 }
 
 // Populate elements with current question data
 function loadQuestion() {
-    var question = quizBox.firstChild;
-    var answerEls = quizBox.lastChild.children;
+    var questionEl = quizBox.children[0];
+    var answerEls = quizBox.children[1].children;
 
-    question.textContent = questions[currentQuestion].question;
+    questionEl.textContent = questions[currentQuestion].question;
 
     for(var i = 0; i < answerEls.length; i++){
         answerEls[i].textContent = questions[currentQuestion].possibleAnswers[i];
+    }
+}
+
+// Check chosen answer and move to next question
+function nextQuestion(event) {
+
+    var chosenAnswer = event.target.getAttribute(id);
+    var rightWrong = quizBox.querySelector("p");
+
+    // Check answer and display message. If answer is wrong, reduce time by 10
+    if (chosenAnswer !== questions[currentQuestion].answer){
+        rightWrong.textContent = "Wrong!";
+        time -= 10;
+    }
+    else {
+        rightWrong.textContent = "Correct!";
+    }
+
+    currentQuestion++;
+
+    // If there are more questions, load next question
+    if(currentQuestion < questions.length){
+        loadQuestion();
+    }
+    // Else, prompt High Scores
+    else {
+        loadHiScorePrompt();
     }
 }
 
@@ -118,3 +154,4 @@ function quizStart () {
 quizPreStart();
 
 document.getElementById("btnStart").addEventListener("click", quizStart);
+document.querySelectorAll(".answer").addEventListener("click", nextQuestion);

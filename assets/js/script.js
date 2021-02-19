@@ -9,12 +9,12 @@ var questionNum;
 var currentQuestion = 0;
 
 // Initialize localStorage if needed
-if (JSON.parse(localStorage.getItem("hiScores")) === null){
+if (JSON.parse(localStorage.getItem("hiScores")) === null) {
     localStorage.setItem("hiScores", JSON.stringify([]));
 }
 
 // Add question data to array
-function loadQuestionData(question, answers, answerID){
+function loadQuestionData(question, answers, answerID) {
     questions.push({
         question: question,
         possibleAnswers: answers,
@@ -24,11 +24,11 @@ function loadQuestionData(question, answers, answerID){
 
 // Load questions into question data array
 // Questions and answers taken from http://mcqspdfs.blogspot.com/2013/08/60-top-javascript-multiple-choice.html
-loadQuestionData("What are variables used for in JavaScript programs?", ["Storing numbers, dates, or other values","Varying randomly","Causing high-school algebra flashbacks","None of the above"], 0);
-loadQuestionData("Which of the following are capabilities of functions in JavaScript?", ["Return a value","Accept parameters and Return a value","Accept parameters","None of the above"], 2);
-loadQuestionData("The ______ tag is an extension to HTML that can enclose any number of JavaScript statements.", ["<script>","<body>","<head>","<title>"], 0);
-loadQuestionData("What is the correct syntax for referring to an external script called 'abc.js'?", ["<script href='abc.js'>","<script name='abc.js'>","<script src='abc.js'>","None of the above"], 2);
-loadQuestionData("The _______ method of an Array object adds and/or removes elements from an array.", ["Reverse","Shift","Slice","Splice"], 3);
+loadQuestionData("What are variables used for in JavaScript programs?", ["Storing numbers, dates, or other values", "Varying randomly", "Causing high-school algebra flashbacks", "None of the above"], 0);
+loadQuestionData("Which of the following are capabilities of functions in JavaScript?", ["Return a value", "Accept parameters and Return a value", "Accept parameters", "None of the above"], 2);
+loadQuestionData("The ______ tag is an extension to HTML that can enclose any number of JavaScript statements.", ["<script>", "<body>", "<head>", "<title>"], 0);
+loadQuestionData("What is the correct syntax for referring to an external script called 'abc.js'?", ["<script href='abc.js'>", "<script name='abc.js'>", "<script src='abc.js'>", "None of the above"], 2);
+loadQuestionData("The _______ method of an Array object adds and/or removes elements from an array.", ["Reverse", "Shift", "Slice", "Splice"], 3);
 
 // Remove elements in current text box.
 function clearElements() {
@@ -54,7 +54,7 @@ function loadHiScores() {
     var quizClearHiScoresBtnEl = document.createElement("button");
 
     var hiScores = JSON.parse(localStorage.getItem("hiScores"));
-    
+
     quizHiScoresEl.textContent = "High Scores";
 
     quizGoBackBtnEl.textContent = "Go Back";
@@ -74,11 +74,11 @@ function loadHiScores() {
 
     quizBox.appendChild(quizGoBackBtnEl);
     quizBox.appendChild(quizClearHiScoresBtnEl);
-    
+
 }
 
 // Set new high score and add it to existing high scores
-function setHiScores(event){
+function setHiScores(event) {
     event.preventDefault();
     var initials = document.getElementById("initials").value;
     console.log(initials);
@@ -129,6 +129,7 @@ function loadHiScorePrompt() {
 // End timer
 function stopTimer() {
     clearInterval(timer);
+    timerEl.textContent = "Time: " + time;
     loadHiScorePrompt();
 }
 
@@ -138,11 +139,11 @@ function startTimer() {
     time = 60;
 
     // Decrement time every second
-    timer = setInterval( () => {
+    timer = setInterval(() => {
         timerEl.textContent = "Time: " + time;
         time--;
 
-        if(time < 0) {
+        if (time < 0) {
             timerEl.textContent = "Time: 0";
             time = 0;
             stopTimer();
@@ -154,7 +155,7 @@ function startTimer() {
 function quizPreStart() {
 
     clearElements();
-    
+
     // Create text elements for the quiz title and description, adding text content
     var quizHeadEl = document.createElement("h2");
     quizHeadEl.textContent = "Coding Quiz Challenge";
@@ -171,7 +172,7 @@ function quizPreStart() {
     // Store elements in array, then loop to add elements to page
     var quizStartEls = [quizHeadEl, quizDescEl, quizStartEl];
 
-    for(var i = 0; i < quizStartEls.length; i++) {
+    for (var i = 0; i < quizStartEls.length; i++) {
         quizBox.appendChild(quizStartEls[i]);
     }
 }
@@ -179,10 +180,10 @@ function quizPreStart() {
 function loadQuestion() {
     var questionEl = quizBox.children[0];
     var answerEls = quizBox.children[1].children;
-    
+
     questionEl.textContent = questions[currentQuestion].question;
 
-    for(var i = 0; i < answerEls.length; i++){
+    for (var i = 0; i < answerEls.length; i++) {
         answerEls[i].lastChild.textContent = questions[currentQuestion].possibleAnswers[i];
     }
 }
@@ -194,7 +195,7 @@ function nextQuestion(event) {
     var rightWrong = quizBox.querySelector("p");
 
     // Check answer and display message. If answer is wrong, reduce time by 10
-    if (chosenAnswer != questions[currentQuestion].answer){
+    if (chosenAnswer != questions[currentQuestion].answer) {
         rightWrong.textContent = "Wrong!";
         time -= 10;
     }
@@ -205,7 +206,7 @@ function nextQuestion(event) {
     currentQuestion++;
 
     // If there are more questions, load next question
-    if(currentQuestion < questions.length){
+    if (currentQuestion < questions.length) {
         loadQuestion();
     }
     // Else, prompt High Scores
@@ -215,7 +216,7 @@ function nextQuestion(event) {
 }
 
 // Create elements for question and answers
-function createQuestionEls(){
+function createQuestionEls() {
     var questionEl = document.createElement("h2");
     var answersEl = document.createElement("ol");
     var rightOrWrong = document.createElement("p");
@@ -224,13 +225,15 @@ function createQuestionEls(){
     quizBox.appendChild(questionEl);
     quizBox.appendChild(answersEl);
 
-    for (var i = 0; i < 4; i++){i
+    for (var i = 0; i < 4; i++) {
+        i
         var answersLiEl = document.createElement("li");
         var answerBtnEl = document.createElement("button");
+        
         answerBtnEl.setAttribute("id", i);
         answerBtnEl.addEventListener("click", nextQuestion);
         answersLiEl.appendChild(answerBtnEl);
-        // answersLiEl.innerHTML = "<button type='button' class='answer' id='" + i + "'></button>";
+
         quizBox.lastChild.appendChild(answersLiEl);
     }
 
@@ -238,7 +241,7 @@ function createQuestionEls(){
 }
 
 // Start the timer and load the first question
-function quizStart () {
+function quizStart() {
     currentQuestion = 0;
 
     clearElements();

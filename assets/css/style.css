@@ -25,7 +25,7 @@ header h3 {
 
 header h3:hover {
     background-color: #9515df;
-    color: #fff;
+    color: #f0aff8;
     cursor: pointer;
 }
 
@@ -41,11 +41,13 @@ button {
 .container {
     display: flex;
     flex-flow: column;
+    width: 75%;
+    margin: auto;
 }
 
 .container h2 {
     font-size: 28px;
-    align-self: center;
+    text-align: center;
     margin: 20px;
 }
 .container button {
@@ -56,9 +58,23 @@ button {
     background-color: #9515df;
 }
 
-#rightWrongText {
-    margin-top: 8px;
+.container button:hover {
+    color: #9515df;
+    background-color: #f0aff8;
+}
+
+.container p {
+    text-align: center;
+    margin: 8px;
     font-size: 16px;
+}
+
+label {
+    margin-left: 30%;
+    padding-top: 12px;
+}
+
+#rightWrongText {
     font-style: italic;
 }
 

@@ -20,6 +20,13 @@ header {
 header h3 {
     font-size: 16px;
     color: #9515df;
+    padding: 8px;
+}
+
+header h3:hover {
+    background-color: #9515df;
+    color: #fff;
+    cursor: pointer;
 }
 
 button {
@@ -28,6 +35,7 @@ button {
     background-color: #9515df;
     color: #fff;
     align-self: center;
+    cursor: pointer;
 }
 
 .container {
@@ -56,4 +64,8 @@ button {
 
 #timer {
     text-align: right;
+}
+
+li {
+    text-align: center;  
 }

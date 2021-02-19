@@ -8,6 +8,11 @@ var questions = [];
 var questionNum;
 var currentQuestion = 0;
 
+// Initialize localStorage if needed
+if (JSON.parse(localStorage.getItem("hiScores")) === null){
+    localStorage.setItem("hiScores", JSON.stringify([]));
+}
+
 // Add question data to array
 function loadQuestionData(question, answers, answerID){
     questions.push({
@@ -32,9 +37,99 @@ function clearElements() {
     }
 }
 
+// Clear current high scores list
+function clearHiScores() {
+    var emptyHiScores = [];
+    localStorage.setItem("hiScores", JSON.stringify(emptyHiScores));
+    loadHiScores();
+}
+
+// Show current high scores
+function loadHiScores() {
+    clearElements();
+
+    var quizHiScoresEl = document.createElement("h2");
+    var quizHiScoresListEl = document.createElement("ul");
+    var quizGoBackBtnEl = document.createElement("button");
+    var quizClearHiScoresBtnEl = document.createElement("button");
+
+    var hiScores = JSON.parse(localStorage.getItem("hiScores"));
+    
+    quizHiScoresEl.textContent = "High Scores";
+
+    quizGoBackBtnEl.textContent = "Go Back";
+    quizGoBackBtnEl.addEventListener("click", quizPreStart);
+
+    quizClearHiScoresBtnEl.textContent = "Clear High Scores";
+    quizClearHiScoresBtnEl.addEventListener("click", clearHiScores);
+
+    quizBox.appendChild(quizHiScoresEl);
+    quizBox.appendChild(quizHiScoresListEl);
+
+    for (var i = 0; i < hiScores.length; i++) {
+        var hiScoreEl = document.createElement("li");
+        hiScoreEl.textContent = hiScores[i].initials + " - " + hiScores[i].score;
+        quizBox.lastChild.appendChild(hiScoreEl);
+    }
+
+    quizBox.appendChild(quizGoBackBtnEl);
+    quizBox.appendChild(quizClearHiScoresBtnEl);
+    
+}
+
+// Set new high score and add it to existing high scores
+function setHiScores(event){
+    event.preventDefault();
+    var initials = document.getElementById("initials").value;
+    console.log(initials);
+    var hiScores = JSON.parse(localStorage.getItem("hiScores"));
+    var newHiScore = {
+        initials: initials,
+        score: time
+    }
+
+    hiScores.push(newHiScore);
+    localStorage.setItem("hiScores", JSON.stringify(hiScores));
+    loadHiScores();
+}
+
+// Generate High Scores page
+function loadHiScorePrompt() {
+    clearElements();
+
+    var quizDoneFormEl = document.createElement("form");
+    var quizDoneEl = document.createElement("h2");
+    var quizDoneScoreEl = document.createElement("p");
+    var quizDoneLabelEl = document.createElement("label");
+    var quizDoneFormTextEl = document.createElement("input");
+    var quizDoneFormBtnEl = document.createElement("input");
+
+    quizDoneEl.textContent = "All done!";
+    quizDoneScoreEl.textContent = "Your score: " + time;
+
+    quizDoneLabelEl.setAttribute("for", "initials");
+    quizDoneLabelEl.textContent = "Enter your initials:";
+
+    quizDoneFormTextEl.setAttribute("id", "initials");
+    quizDoneFormTextEl.setAttribute("type", "text");
+    quizDoneLabelEl.append(quizDoneFormTextEl);
+
+    quizDoneFormBtnEl.setAttribute("type", "submit");
+    quizDoneFormBtnEl.textContent = "Enter High Scores";
+    quizDoneFormBtnEl.addEventListener("click", setHiScores);
+
+    quizDoneFormEl.appendChild(quizDoneEl);
+    quizDoneFormEl.appendChild(quizDoneScoreEl);
+    quizDoneFormEl.appendChild(quizDoneLabelEl);
+    quizDoneFormEl.appendChild(quizDoneFormBtnEl);
+
+    quizBox.appendChild(quizDoneFormEl);
+}
+
 // End timer
 function stopTimer() {
     clearInterval(timer);
+    loadHiScorePrompt();
 }
 
 // Start timer
@@ -48,13 +143,11 @@ function startTimer() {
         time--;
 
         if(time < 0) {
+            timerEl.textContent = "Time: 0";
+            time = 0;
             stopTimer();
         }
     }, 1000);
-}
-
-function loadHiScorePrompt() {
-
 }
 
 // Generate elements for quiz start screen
@@ -69,10 +162,11 @@ function quizPreStart() {
     var quizDescEl = document.createElement("p");
     quizDescEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!";
 
-    // Create start button to begin quiz
+    // Create start button to begin quiz, including event handler
     var quizStartEl = document.createElement("button");
     quizStartEl.id = "btnStart";
     quizStartEl.textContent = "Start Quiz";
+    quizStartEl.addEventListener("click", quizStart);
 
     // Store elements in array, then loop to add elements to page
     var quizStartEls = [quizHeadEl, quizDescEl, quizStartEl];
@@ -98,7 +192,6 @@ function nextQuestion(event) {
 
     var chosenAnswer = event.target.getAttribute("id");
     var rightWrong = quizBox.querySelector("p");
-    console.log(chosenAnswer);
 
     // Check answer and display message. If answer is wrong, reduce time by 10
     if (chosenAnswer != questions[currentQuestion].answer){
@@ -118,18 +211,7 @@ function nextQuestion(event) {
     // Else, prompt High Scores
     else {
         stopTimer();
-        loadHiScorePrompt();
     }
-}
-
-function quizStart () {
-    currentQuestion = 0;
-
-    clearElements();
-    startTimer();
-
-    createQuestionEls();
-    loadQuestion();
 }
 
 // Create elements for question and answers
@@ -153,10 +235,20 @@ function createQuestionEls(){
     }
 
     quizBox.appendChild(rightOrWrong);
+}
 
+// Start the timer and load the first question
+function quizStart () {
+    currentQuestion = 0;
+
+    clearElements();
+    startTimer();
+
+    createQuestionEls();
+    loadQuestion();
 }
 
 
 quizPreStart();
 
-document.getElementById("btnStart").addEventListener("click", quizStart);
+document.querySelector("h3").addEventListener("click", loadHiScores);
